@@ -1,7 +1,6 @@
 from project.server.log import INFO
 
 import datetime
-import jwt
 
 from project.server import app, db
 
