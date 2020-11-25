@@ -32,6 +32,7 @@ from project.tests.test__config import TestDevelopmentConfig
 from project.tests.test_log import TestLog
 from project.tests.api.test_all import TestAllBlueprint
 from project.tests.api.test_add import TestAddBlueprint
+from project.tests.api.test_create import TestCreateBlueprint
 
 @manager.option('-c', '--class', dest='test_class', default='all')
 def test(test_class):

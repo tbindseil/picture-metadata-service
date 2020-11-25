@@ -4,12 +4,13 @@ import json
 
 from project.tests.base import BaseTestCase
 
-from project.server.models import Picture
+# from project.server.models import Picture
+from dwf.clients.auth.model import User
 
 class TestCreateBlueprint(BaseTestCase):
     title = "title"
     title_data = json.dumps(dict(
-        title=self.title
+        title=title
     ))
 
     good_token = "good_token"
