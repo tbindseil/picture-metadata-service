@@ -3,7 +3,7 @@ import datetime
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 postgres_local_base = 'postgresql:///'
-database_name = 'example_database'
+database_name = 'picture_metadata_database'
 
 
 def get_secret_key():
@@ -33,4 +33,4 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     """Production configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///example_database'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///picture_metadata_database'

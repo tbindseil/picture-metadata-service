@@ -3,7 +3,7 @@
 
 import os
 import unittest
-import coverage
+import coverage # TODO on mac i needed coverage 5.3
 
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
@@ -32,6 +32,7 @@ from project.tests.test__config import TestDevelopmentConfig
 from project.tests.test_log import TestLog
 from project.tests.api.test_all import TestAllBlueprint
 from project.tests.api.test_add import TestAddBlueprint
+from project.tests.api.test_create import TestCreateBlueprint
 
 @manager.option('-c', '--class', dest='test_class', default='all')
 def test(test_class):

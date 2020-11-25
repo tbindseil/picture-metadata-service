@@ -4,23 +4,33 @@ import json
 
 from project.tests.base import BaseTestCase
 
+# TODO package... from dwf.clients.auth.model import User
+from project.server.dwf.clients.auth.models import User
+from project.server.dwf.clients.auth.apis import AuthException
+
 from project.server.models import Picture
+from project.server import db
+
+from unittest.mock import patch
 
 class TestCreateBlueprint(BaseTestCase):
+    patcher = None
+    mock_authenticate = None
+
     title = "title"
     title_data = json.dumps(dict(
-        title=self.title
+        title=title
     ))
 
     good_token = "good_token"
     user = User(
         username='user@test.com',
-        password='user_pw'
+        admin=False
     )
     other_user_token = "other_user_token"
     other_user = User(
         username='other_user@test.com',
-        password='other_user_pw'
+        admin=False
     )
     bad_token = "bad_token"
 
@@ -28,26 +38,22 @@ class TestCreateBlueprint(BaseTestCase):
         BaseTestCase.setUp(self)
 
         # by default, user is logged in, so authorize returns valid token
-        self.patcher = patch('dwf.clients.auth.authenticate')
-        # so I'm worried about something here,
-        # I'm worried about if the user doesn't match the user in the token
-        # what user? the user that makes the request.
-        # well how would they have another token?
-        # not worried about it. having the authorization header means you can
-        # impersonate the user, so its a moot point to check if the user they
-        # say they are doesn't match the token.
+        self.patcher = patch('project.server.api.create.authenticate')
+        self.mock_authenticate = self.patcher.start()
+
         def authenticate_side_effect(token):
             if token == self.good_token:
                 return self.user
             elif token == self.other_user_token:
                 return self.other_user
             else:
-                raise Exception("Unauthorized")
-        mock_authenticate.side_effect = authenticate_side_effect
+                raise AuthException("Unauthorized")
+        self.mock_authenticate.side_effect = authenticate_side_effect
 
-    # actually, its part of the auth service to handle no/bad toke.
-    # it is up to pms to call with token (from somewhere?? TODO) always,
-    # and handle failure accordingly
+    def tearDown(self):
+        BaseTestCase.tearDown(self)
+        self.patcher.stop()
+
     def test_create_verifies_authenticated_always(self):
         with self.client:
             response = self.client.post(
@@ -58,7 +64,7 @@ class TestCreateBlueprint(BaseTestCase):
                     Authorization='Bearer ' + self.good_token
                 )
             )
-            mock_authenticate.assert_called_with(self.good_token)
+            self.mock_authenticate.assert_called_with(self.good_token)
 
     def test_create_returns_unauthenticated_when_no_token(self):
         with self.client:
@@ -156,8 +162,8 @@ class TestCreateBlueprint(BaseTestCase):
     def test_create_returns_error_when_exception_occurs(self):
         with self.client:
             response = self.client.post(
-                '/example/add',
-                data="INVALID JSON $$#@",
+                '/picture-metadata/create',
+                data="DHFSDHFS###$$$",
                 content_type='application/json',
                 headers=dict(
                     Authorization='Bearer ' + self.good_token

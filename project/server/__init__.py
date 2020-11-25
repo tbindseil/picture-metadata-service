@@ -13,6 +13,7 @@ app.config.from_object(app_settings)
 
 db = SQLAlchemy(app)
 
-from project.server.api import add_blueprint, all_blueprint
+from project.server.api import add_blueprint, all_blueprint, create_blueprint
 app.register_blueprint(add_blueprint)
 app.register_blueprint(all_blueprint)
+app.register_blueprint(create_blueprint)

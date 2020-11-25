@@ -18,7 +18,7 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['DEBUG'] is True)
         self.assertFalse(current_app is None)
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql:///example_database'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql:///picture_metadata_database'
         )
 
 
@@ -31,7 +31,7 @@ class TestTestingConfig(TestCase):
         self.assertFalse(app.config['SECRET_KEY'] is 'my_precios')
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(
-            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql:///example_database_test'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql:///picture_metadata_database_test'
         )
 
 
