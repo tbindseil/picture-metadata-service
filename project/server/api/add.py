@@ -4,29 +4,20 @@ from flask import request, make_response, jsonify
 from flask.views import MethodView
 
 from project.server import db
-from project.server.models import Picture
+from project.server.models import Example
 
-class CreatePictureAPI(MethodView):
+class AddExampleAPI(MethodView):
     """
-    Create Picture and its metadata
+    Add Example Resource
     """
+
     def post(self):
         try:
             # get the post data
             post_data = request.get_json()
-            title = post_data.get('title')
-            auth_header = request.headers.get('Authorization')
-            if auth_header:
-                token = auth_header.split(" ")[1]
-            else:
-                token = ''
-
-            authenticate()
-
-            # user = ... # need to extract user from token
-            # ^nope get token from ehader
+            field = post_data.get('field')
             # check if example already exists
-            picture = Example.query.filter_by(field=field).first()
+            example = Example.query.filter_by(field=field).first()
             if not example:
                 example = Example(field=field)
                 # insert the example
