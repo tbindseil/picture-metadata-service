@@ -4,8 +4,12 @@ import json
 
 from project.tests.base import BaseTestCase
 
-# from project.server.models import Picture
-from dwf.clients.auth.model import User
+# TODO package... from dwf.clients.auth.model import User
+from project.server.dwf.clients.auth.models import User
+
+from project.server.models import Picture
+
+from unittest.mock import patch
 
 class TestCreateBlueprint(BaseTestCase):
     title = "title"
@@ -16,12 +20,12 @@ class TestCreateBlueprint(BaseTestCase):
     good_token = "good_token"
     user = User(
         username='user@test.com',
-        password='user_pw'
+        admin=False
     )
     other_user_token = "other_user_token"
     other_user = User(
         username='other_user@test.com',
-        password='other_user_pw'
+        admin=False
     )
     bad_token = "bad_token"
 
@@ -29,7 +33,9 @@ class TestCreateBlueprint(BaseTestCase):
         BaseTestCase.setUp(self)
 
         # by default, user is logged in, so authorize returns valid token
-        self.patcher = patch('dwf.clients.auth.authenticate')
+        self.patcher = patch('project.server.dwf.clients.auth.apis.authenticate')
+
+        mock_authenticate = self.patcher.start()
         # so I'm worried about something here,
         # I'm worried about if the user doesn't match the user in the token
         # what user? the user that makes the request.

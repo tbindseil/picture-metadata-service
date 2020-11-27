@@ -4,9 +4,11 @@ from flask import request, make_response, jsonify
 from flask.views import MethodView
 
 from project.server import db
-from project.server.models import Picture
+from project.server.models import Example
 
-class CreatePictureAPI(MethodView):
+from project.server.dwf.clients.auth.apis import authenticate
+
+class AddExampleAPI(MethodView):
     """
     Create Picture and its metadata
     """
