@@ -38,7 +38,7 @@ class TestCreateBlueprint(BaseTestCase):
         BaseTestCase.setUp(self)
 
         # by default, user is logged in, so authorize returns valid token
-        self.patcher = patch('project.server.api.create.authenticate')
+        self.patcher = patch('project.server.api.authenticate')
         self.mock_authenticate = self.patcher.start()
 
         def authenticate_side_effect(token):

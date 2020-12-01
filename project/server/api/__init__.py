@@ -1,4 +1,6 @@
-from flask import Blueprint
+from project.server.log import INFO
+
+from flask import Blueprint, request, make_response, jsonify, g
 
 from .add import AddExampleAPI
 from .all import GetAllExampleAPI
@@ -30,3 +32,28 @@ create_blueprint.add_url_rule(
     view_func=create_view,
     methods=['POST']
 )
+
+# TODO put in dwf.clients.auth somewhere,
+# then call that with all authenticated bloueprints,
+# so it can iterate and set all their before_request
+# authentication method
+from project.server.dwf.clients.auth.apis import AuthException, authenticate
+def check_bearer_token():
+    try:
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            token = auth_header.split(" ")[1]
+        else:
+            token = ''
+        g.user = authenticate(token)
+        return None
+    except AuthException as e:
+        responseObject = {
+            'status': 'fail',
+            'message': 'Invalid auth token.'
+        }
+        return make_response(jsonify(responseObject)), 401
+
+# add_blueprint.before_request(check_bearer_token)
+# all_blueprint.before_request(check_bearer_token)
+create_blueprint.before_request(check_bearer_token)
