@@ -5,8 +5,8 @@ import json
 from project.tests.base import BaseTestCase
 
 # TODO package... from dwf.clients.auth.model import User
-from project.server.dwf.clients.auth.models import User
-from project.server.dwf.clients.auth.apis import AuthException
+from dwfclients.auth.models import User
+from dwfclients.auth.apis import AuthException
 
 from project.server.models import Picture
 from project.server import db
@@ -38,7 +38,7 @@ class TestCreateBlueprint(BaseTestCase):
         BaseTestCase.setUp(self)
 
         # by default, user is logged in, so authorize returns valid token
-        self.patcher = patch('project.server.api.authenticate')
+        self.patcher = patch('dwfclients.auth.apis.authenticate')
         self.mock_authenticate = self.patcher.start()
 
         def authenticate_side_effect(token):
